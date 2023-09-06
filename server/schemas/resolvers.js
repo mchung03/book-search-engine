@@ -1,14 +1,18 @@
-const { Book, User } = require('../models');
+const { User } = require('../models');
 const { signToken, AuthenticationError } = require('../utils/auth');
 
 const resolvers = {
     Query: {
-        book: async() => {
-            return Book.find({});
-        },
-        user: async(parent, { _id }) => {
-            const params = _id ? { _id } : {};
-            return User.find(params);
+        me: async(parent, args, context) => {
+            const foundUser = await User.findOne({
+                _id: context.user._id
+              });
+          
+              if (!foundUser) {
+                throw AuthenticationError;
+              }
+          
+              return (foundUser);
         },
     },
     Mutation: {
@@ -34,26 +38,25 @@ const resolvers = {
 
             return { token, user };
         },
-        saveBook: async(parent, { bookId }, context) => {
+        saveBook: async(parent, args, context) => {
             if(context.user) {
-                const book = await Book.findOneAndUpdate(
+                const book = await User.findOneAndUpdate(
                     { _id },
-                    { $addToSet: { savedBooks: book }}
+                    { $addToSet: { savedBooks: args.bookData }}
                 );
 
                 return book;
             }
             throw AuthenticationError;
         },
-        removeBook: async(parent, { bookId }, context) => {
+        removeBook: async(parent, args, context) => {
             if(context.user) {
-                const book = await Book.findOneAndDelete({
-                    _id: bookId
-                });
 
-                await User.findOneAndUpdate(
+                const book = await User.findOneAndUpdate(
                     { _id: context.user._id },
-                    { $pull: { books: book._id }}
+                    { $pull: { savedBooks: {
+                        bookId: args.bookId
+                    } }}
                 );
 
                 return book;
