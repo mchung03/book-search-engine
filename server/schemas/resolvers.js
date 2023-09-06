@@ -40,26 +40,26 @@ const resolvers = {
         },
         saveBook: async(parent, args, context) => {
             if(context.user) {
-                const book = await User.findOneAndUpdate(
+                const updatedUser = await User.findOneAndUpdate(
                     { _id },
                     { $addToSet: { savedBooks: args.bookData }}
                 );
 
-                return book;
+                return updatedUser;
             }
             throw AuthenticationError;
         },
         removeBook: async(parent, args, context) => {
             if(context.user) {
 
-                const book = await User.findOneAndUpdate(
+                const updatedUser = await User.findOneAndUpdate(
                     { _id: context.user._id },
                     { $pull: { savedBooks: {
                         bookId: args.bookId
                     } }}
                 );
 
-                return book;
+                return updatedUser;
             }
             throw AuthenticationError;
         },
