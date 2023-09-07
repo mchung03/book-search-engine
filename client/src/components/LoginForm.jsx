@@ -30,8 +30,9 @@ const LoginForm = () => {
     try {
       const response = await loginUser({
         variables:{
-          "email": userFormData.email,
-          "password": userFormData.password
+          // "email": userFormData.email,
+          // "password": userFormData.password
+          ...userFormData
       }});
 
       const { token, user } = response.data.login;

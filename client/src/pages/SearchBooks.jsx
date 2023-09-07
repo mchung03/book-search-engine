@@ -75,15 +75,16 @@ const SearchBooks = () => {
     }
 
     try {
-      const response = await saveBook({
+      await saveBook({
         variables: {
-          "bookData": {
-            "authors": bookToSave.authors,
-            "bookId": bookToSave.bookId,
-            "description": bookToSave.description,
-            "image": bookToSave.image,
-            "title": bookToSave.title
-          }
+          ...bookToSave
+          // "bookData": {
+          //   "authors": bookToSave.authors,
+          //   "bookId": bookToSave.bookId,
+          //   "description": bookToSave.description,
+          //   "image": bookToSave.image,
+          //   "title": bookToSave.title
+          // }
         }
       });
 

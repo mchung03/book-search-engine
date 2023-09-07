@@ -32,9 +32,10 @@ const SignupForm = () => {
     try {
       const response = await createUser({
         variables: {
-          "username": userFormData.username,
-          "email": userFormData.email,
-          "password": userFormData.password
+          // "username": userFormData.username,
+          // "email": userFormData.email,
+          // "password": userFormData.password
+          ...userFormData
         }
       });
 
